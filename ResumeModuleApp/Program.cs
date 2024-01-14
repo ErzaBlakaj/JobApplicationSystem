@@ -9,7 +9,11 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddDbContext<ResumeContext>(options => options.UseSqlServer("Data Source=DESKTOP-QT52I2U\\SQLEXPRESS;Initial Catalog=ResumeModule;Integrated Security=True;"));
+
+//TODO Get con string from appsettings json
+
+var connectionString = builder.Configuration.GetSection("ConnectionString").Value;
+builder.Services.AddDbContext<ResumeContext>(options => options.UseSqlServer(connectionString));
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
