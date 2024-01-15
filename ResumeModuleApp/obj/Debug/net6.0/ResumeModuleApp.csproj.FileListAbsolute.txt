@@ -134,3 +134,4 @@ C:\Users\PC\Desktop\ResumeModuleApp\ResumeModule\ResumeModuleApp\obj\Debug\net6.
 C:\Users\PC\Desktop\ResumeModuleApp\ResumeModule\ResumeModuleApp\obj\Debug\net6.0\ResumeModuleApp.csproj.CopyComplete
 C:\Users\PC\Desktop\ResumeModuleApp\ResumeModule\ResumeModuleApp\obj\Debug\net6.0\ResumeModuleApp.genruntimeconfig.cache
 C:\Users\PC\Desktop\ResumeModuleApp\ResumeModule\ResumeModuleApp\obj\Debug\net6.0\ref\ResumeModuleApp.dll
+C:\Users\PC\Desktop\ResumeModuleApp\ResumeModule\ResumeModuleApp\obj\Debug\net6.0\ResumeModuleApp.sourcelink.json
