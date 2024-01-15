@@ -11,5 +11,8 @@ namespace ResumeModuleApp.Models
         public string Education { get; set; }
         public string Experience { get; set; }
         public string? Position { get; set; }
+
+        public string skills { get; set; }
+       
     }
 }
