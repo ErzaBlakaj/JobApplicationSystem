@@ -74,12 +74,10 @@ namespace ResumeModuleApp.Controllers
                 return NotFound();
             }
 
-            existingResume.ResumeId = updatedResume.ResumeId;
+            //existingResume.ResumeId = updatedResume.ResumeId;
             existingResume.ApplicantName = updatedResume.ApplicantName;
             existingResume.Education = updatedResume.Education;
-            existingResume.Experience = updatedResume.Experience;
             existingResume.Position = updatedResume.Position;
-            existingResume.skills = updatedResume.skills;
 
             _context.Resumes.Update(existingResume);
             await _context.SaveChangesAsync();
