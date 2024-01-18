@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using ResumeModuleApp.DataService;
+using ResumeModuleApp.DTOs;
 using ResumeModuleApp.Models;
 
 namespace ResumeModuleApp.Controllers
@@ -10,24 +12,42 @@ namespace ResumeModuleApp.Controllers
     {
 
         private ResumeContext _context;
+        private readonly IMapper _mapper;
 
-        public UserController(ResumeContext context)
+        public UserController(ResumeContext context,IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         [HttpPost("create")]
-        public async Task<IActionResult> AddUser([FromBody] User user)
+        public async Task<IActionResult> AddUser([FromBody] UserDTO user)
         {
             if (user == null)
             {
                 return BadRequest("Invalid user data");
             }
 
-            _context.Users.Add(user);
+            //User newUser = new User
+            //{
+            //    Emri = user.Emri,
+            //    Email = user.Email,
+            //    Mbiemri = user.Mbiemri,
+            //    Password = user.Password
+            //};
+
+            if (_context.Users.Any(u => u.Email == user.Email))
+            {
+                return Conflict("User with this email already exists");
+            }
+
+            var newUser = _mapper.Map<User>(user);
+
+            _context.Users.Add(newUser);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(GetUser), new { id = user.UsersId }, user);
+            // You can return the created user or a success message based on your requirements
+            return Ok();
         }
 
         [HttpGet("{id}")]
@@ -44,6 +64,7 @@ namespace ResumeModuleApp.Controllers
 
             return Ok(user);
         }
+
         [HttpDelete("delete/{id}")]
         public async Task<IActionResult> DeleteUser(int id)
         {
@@ -59,30 +80,30 @@ namespace ResumeModuleApp.Controllers
 
             return NoContent();
         }
+
         [HttpPut("update/{id}")]
-        public async Task<IActionResult> UpdateUser(int id, [FromBody] User updatedUser)
+        public async Task<IActionResult> UpdateUser(int id, [FromBody] UserDTO updatedUserDTO)
         {
-            if (updatedUser == null || id != updatedUser.UsersId)
+            if (updatedUserDTO == null || id != updatedUserDTO.UsersId)
             {
                 return BadRequest("Invalid data or mismatched id");
             }
 
-            var existingUser = _context.Users.Find(id);
+            var existingUser = await _context.Users.FindAsync(id);
 
             if (existingUser == null)
             {
                 return NotFound();
             }
 
-            existingUser.Emri = updatedUser.Emri;
-            updatedUser.Mbiemri = updatedUser.Mbiemri;
-            updatedUser.Email = updatedUser.Mbiemri;
-            updatedUser.Password = updatedUser.Password;
+            //var newUser = _mapper.Map<User>(updatedUserDTO);
+            _mapper.Map(updatedUserDTO, existingUser);
 
             _context.Users.Update(existingUser);
             await _context.SaveChangesAsync();
 
             return Ok(existingUser);
         }
+
     }
 }
