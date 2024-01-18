@@ -24,11 +24,11 @@ namespace ResumeModuleApp.Controllers
         }
 
         [HttpPost("create")]
-        public async Task<IActionResult> AddResume([FromBody] Skills skills)
+        public async Task<IActionResult> AddSkills([FromBody] Skills skills)
         {
             if (skills == null)
             {
-                return BadRequest("Invalid resume data");
+                return BadRequest("Invalid skills data");
             }
 
             _context.Skills.Add(skills);
