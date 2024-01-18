@@ -1,11 +1,4 @@
-﻿
-
-
-
-
-
-
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using ResumeModuleApp.DataService;
 using ResumeModuleApp.Models;
 
