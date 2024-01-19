@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using ResumeModuleApp.DataService;
+using ResumeModuleApp.DTOs;
 using ResumeModuleApp.Models;
 
 namespace ResumeModuleApp.Controllers
@@ -10,24 +12,39 @@ namespace ResumeModuleApp.Controllers
     {
 
         private ResumeContext _context;
+        private readonly IMapper _mapper;
 
-        public ResumeController(ResumeContext context)
+        public ResumeController(ResumeContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         [HttpPost("create")]
-        public async Task<IActionResult> AddResume([FromBody] Resume resume)
+        public async Task<IActionResult> AddResume([FromBody] ResumeDTO resume)
         {
             if (resume == null)
             {
                 return BadRequest("Invalid resume data");
             }
 
-            _context.Resumes.Add(resume);
+            //_context.Resumes.Add(resume);
+            //await _context.SaveChangesAsync();
+
+            //return CreatedAtAction(nameof(GetResume), new { id = resume.ResumeId }, resume
+            
+            if( _context.Resumes.Any(r => r.ApplicantName == resume.ApplicantName))
+            {
+                return Conflict("Resume with this name already exists");
+            }
+
+            var newResume = _mapper.Map<Resume>(resume);
+
+            _context.Resumes.Add(newResume);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(GetResume), new { id = resume.ResumeId }, resume);
+            return Ok();
+
         }
 
         [HttpGet("{id}")]
