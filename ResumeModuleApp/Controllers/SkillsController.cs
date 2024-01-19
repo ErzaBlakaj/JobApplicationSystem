@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using ResumeModuleApp.DataService;
+using ResumeModuleApp.DTOs;
 using ResumeModuleApp.Models;
 
 namespace ResumeModuleApp.Controllers
@@ -10,24 +12,34 @@ namespace ResumeModuleApp.Controllers
     {
 
         private ResumeContext _context;
+        private readonly IMapper _mapper;
 
-        public SkillsController(ResumeContext context)
+        public SkillsController(ResumeContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         [HttpPost("create")]
-        public async Task<IActionResult> AddSkills([FromBody] Skills skills)
+        public async Task<IActionResult> AddSkills([FromBody] SkillsDTO skills)
         {
             if (skills == null)
             {
                 return BadRequest("Invalid skills data");
             }
 
-            _context.Skills.Add(skills);
+            if (_context.Skills.Any(s => s.Description == skills.Description && s.ResumeId == skills.ResumeId))
+            {
+                return Conflict("The skill with this description already exists");
+            }
+
+            var newSkills = _mapper.Map<Skills>(skills);
+
+            _context.Skills.Add(newSkills);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(GetSkills), new { id =skills.SkillsId }, skills);
+
+            return Ok();
         }
 
         [HttpGet("{id}")]
@@ -60,9 +72,9 @@ namespace ResumeModuleApp.Controllers
             return NoContent();
         }
         [HttpPut("update/{id}")]
-        public async Task<IActionResult> UpdateSkills(int id, [FromBody] Skills updatedSkills)
+        public async Task<IActionResult> UpdateSkills(int id, [FromBody] SkillsDTO updatedSkillsDTO)
         {
-            if (updatedSkills== null || id != updatedSkills.SkillsId)
+            if (updatedSkillsDTO == null || id != updatedSkillsDTO.SkillsId)
             {
                 return BadRequest("Invalid data or mismatched id");
             }
@@ -74,14 +86,15 @@ namespace ResumeModuleApp.Controllers
                 return NotFound();
             }
 
-          
-          
-            existingSkills.Description = updatedSkills.Description;
+            _mapper.Map(updatedSkillsDTO, existingSkills);
+
+       
 
             _context.Skills.Update(existingSkills);
             await _context.SaveChangesAsync();
 
             return Ok(existingSkills);
         }
+
     }
 }
