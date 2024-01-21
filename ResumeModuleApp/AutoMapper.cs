@@ -8,7 +8,6 @@ namespace ResumeModuleApp
     {
         public AutoMapper()
         {
-            //CreateMap<ResumeDTO, Resume>();
             CreateMap<UserDTO, User>();
             CreateMap<SkillsDTO, Skills>();
             CreateMap<ExperienceDTO, Experience>();

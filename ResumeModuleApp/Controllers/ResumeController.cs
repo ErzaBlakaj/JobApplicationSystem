@@ -28,6 +28,12 @@ namespace ResumeModuleApp.Controllers
                 return BadRequest("Invalid resume data");
             }
            
+
+            //if( _context.Resumes.Any(r => r.ApplicantName == resume.ApplicantName))
+            //{
+            //    return Conflict("Resume with this name already exists");
+            //}
+
             var newResume = _mapper.Map<Resume>(resume);
 
             _context.Resumes.Add(newResume);
