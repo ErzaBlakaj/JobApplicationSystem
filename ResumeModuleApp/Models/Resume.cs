@@ -8,7 +8,6 @@ namespace ResumeModuleApp.Models
 
         [Key]
         public int ResumeId  { get; set; }
-        public string ApplicantName { get; set; }
         public string Education { get; set; }
         public string? Position { get; set; }
         public string Languages { get; set; }

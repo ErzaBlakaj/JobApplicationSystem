@@ -27,17 +27,7 @@ namespace ResumeModuleApp.Controllers
             {
                 return BadRequest("Invalid resume data");
             }
-
-            //_context.Resumes.Add(resume);
-            //await _context.SaveChangesAsync();
-
-            //return CreatedAtAction(nameof(GetResume), new { id = resume.ResumeId }, resume
-            
-            if( _context.Resumes.Any(r => r.ApplicantName == resume.ApplicantName))
-            {
-                return Conflict("Resume with this name already exists");
-            }
-
+           
             var newResume = _mapper.Map<Resume>(resume);
 
             _context.Resumes.Add(newResume);
@@ -77,24 +67,21 @@ namespace ResumeModuleApp.Controllers
             return NoContent();
         }
         [HttpPut("update/{id}")]
-        public async Task<IActionResult> UpdateResume(int id, [FromBody] Resume updatedResume)
+        public async Task<IActionResult> UpdateResume(int id, [FromBody] ResumeDTO updatedResumeDTO)
         {
-            if (updatedResume == null || id != updatedResume.ResumeId)
+            if (updatedResumeDTO == null || id != updatedResumeDTO.ResumeId)
             {
                 return BadRequest("Invalid data or mismatched id");
             }
 
-            var existingResume = _context.Resumes.Find(id);
+            var existingResume = await _context.Resumes.FindAsync(id);
 
             if (existingResume == null)
             {
                 return NotFound();
             }
 
-            //existingResume.ResumeId = updatedResume.ResumeId;
-            existingResume.ApplicantName = updatedResume.ApplicantName;
-            existingResume.Education = updatedResume.Education;
-            existingResume.Position = updatedResume.Position;
+            _mapper.Map(updatedResumeDTO, existingResume);
 
             _context.Resumes.Update(existingResume);
             await _context.SaveChangesAsync();

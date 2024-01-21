@@ -58,10 +58,6 @@ namespace ResumeModuleApp.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ResumeId"), 1L, 1);
 
-                    b.Property<string>("ApplicantName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Education")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
