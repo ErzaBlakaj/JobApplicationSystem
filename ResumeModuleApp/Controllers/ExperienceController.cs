@@ -12,24 +12,29 @@ namespace ResumeModuleApp.Controllers
     {
 
         private ResumeContext _context;
+        private readonly IMapper _mapper;
 
-        public ExperienceController(ResumeContext context)
+        public ExperienceController(ResumeContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         [HttpPost("create")]
-        public async Task<IActionResult> AddExperience([FromBody] Experience experience)
+        public async Task<IActionResult> AddExperience([FromBody] ExperienceDTO experience)
         {
             if (experience == null)
             {
                 return BadRequest("Invalid experience data");
             }
 
-            _context.Experiences.Add(experience);
+
+            var newExperience = _mapper.Map<Experience>(experience);
+
+            _context.Experiences.Add(newExperience);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(GetExperience), new { id = experience.ExperienceId }, experience);
+            return Ok();
         }
 
         [HttpGet("{id}")]
@@ -62,9 +67,9 @@ namespace ResumeModuleApp.Controllers
             return NoContent();
         }
         [HttpPut("update/{id}")]
-        public async Task<IActionResult> UpdateExperience(int id, [FromBody] Experience updatedExperience)
+        public async Task<IActionResult> UpdateExperience(int id, [FromBody] ExperienceDTO updatedExperienceDTO)
         {
-            if (updatedExperience == null || id != updatedExperience.ExperienceId)
+            if (updatedExperienceDTO == null || id != updatedExperienceDTO.ExperienceId)
             {
                 return BadRequest("Invalid data or mismatched id");
             }
@@ -76,9 +81,7 @@ namespace ResumeModuleApp.Controllers
                 return NotFound();
             }
 
-            updatedExperience.DateFrom = updatedExperience.DateFrom;
-            updatedExperience.DateTo = updatedExperience.DateTo;
-            updatedExperience.Description = updatedExperience.Description;
+            _mapper.Map(updatedExperienceDTO, existingExperience);
 
             _context.Experiences.Update(existingExperience);
             await _context.SaveChangesAsync();
