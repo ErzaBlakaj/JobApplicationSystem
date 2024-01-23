@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using ResumeModuleApp.DataService;
+using ResumeModuleApp.DTOs;
 using ResumeModuleApp.Models;
 
 namespace ResumeModuleApp.Controllers
