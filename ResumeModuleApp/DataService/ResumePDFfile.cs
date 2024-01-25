@@ -35,36 +35,34 @@ namespace ResumeModuleApp.DataService
 
             if (resume == null)
             {
-                // Handle the case where the resume does not exist
+               
                 return null;
             }
 
-            // Create a MemoryStream to store the PDF content
+         
             using (var stream = new MemoryStream())
             {
-                // Create a PdfWriter instance
+          
                 using (var writer = new PdfWriter(stream))
                 {
-                    // Create a PdfDocument instance
                     using (var pdf = new PdfDocument(writer))
                     {
-                        // Create a Document instance
                         var document = new Document(pdf);
 
-                        // Add resume information
+                       
                         document.Add(new Paragraph($"Resume ID: {resume.ResumeId}"));
                         document.Add(new Paragraph($"Education: {resume.Education}"));
                         document.Add(new Paragraph($"Position: {resume.Position}"));
                         document.Add(new Paragraph($"Languages: {resume.Languages}"));
 
-                        // Add skills
+                       
                         document.Add(new Paragraph("Skills:"));
                         foreach (var skill in resume.Skills)
                         {
                             document.Add(new Paragraph($"- {skill.Description}"));
                         }
 
-                        // Add experiences
+                      
                         document.Add(new Paragraph("Experiences:"));
                         foreach (var experience in resume.Experiences)
                         {
