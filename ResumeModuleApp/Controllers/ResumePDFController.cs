@@ -2,6 +2,7 @@
 using ResumeModuleApp.DataService;
 using Microsoft.AspNetCore.Mvc;
 using ResumeModuleApp.DataService;
+using Microsoft.EntityFrameworkCore;
 
 namespace ResumeModuleApp.Controllers
 {
@@ -21,15 +22,33 @@ namespace ResumeModuleApp.Controllers
         [HttpGet("pdf/{id}")]
         public IActionResult GetResumePdf(int id)
         {
+            var resume = _context.Resumes
+                .Include(r => r.User)
+                .Include(r => r.Skills)
+                .Include(r => r.Experiences)
+                .FirstOrDefault(r => r.ResumeId == id);
 
-            var pdfContent = _resumePdfService.GeneratePdf(id);
+            if (resume == null)
+            {
+                return NotFound("Resume not found");
+            }
+
+            var user = resume.User;
+
+            if (user == null)
+            {
+                return NotFound("User not found");
+            }
+
+            var pdfContent = _resumePdfService.GeneratePdf(id, user);
 
             if (pdfContent == null)
             {
-                return NotFound();
+                return NotFound("PDF generation failed");
             }
 
-            return File(pdfContent, "application/pdf", "Resume.pdf");
+            return File(pdfContent, "application/pdf", $"Resume_{id}.pdf");
         }
     }
 }
+
