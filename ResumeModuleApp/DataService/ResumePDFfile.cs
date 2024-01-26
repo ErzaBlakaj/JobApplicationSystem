@@ -8,6 +8,7 @@ using System;
 using System.IO;
 using Microsoft.EntityFrameworkCore;
 using ResumeModuleApp.Models;
+using iText.Kernel.Colors;
 
 namespace ResumeModuleApp.DataService
 {
@@ -59,20 +60,29 @@ namespace ResumeModuleApp.DataService
             }
         }
 
+       
+
         private void AddUserInformationSection(Document document, User user)
         {
             document.Add(new Paragraph("\n"));
 
+            var titleStyle = new Style()
+                .SetFontSize(14)
+                .SetBold();
 
-            document.Add(new Paragraph("User Information").SetFontSize(14).SetBold());
+            var titleParagraph = new Paragraph("User Information")
+                .AddStyle(titleStyle)
+                .SetBackgroundColor(DeviceRgb.RED);
+
+            document.Add(titleParagraph);
 
             var userTable = new Table(2).UseAllAvailableWidth();
             userTable.SetBorder(new SolidBorder(1f));
-            userTable.AddCell(CreateCell("First Name:").SetBold());
+            userTable.AddCell(CreateCell("First Name:").AddStyle(titleStyle));
             userTable.AddCell(CreateCell(user.Emri));
-            userTable.AddCell(CreateCell("Last Name:").SetBold());
+            userTable.AddCell(CreateCell("Last Name:").AddStyle(titleStyle));
             userTable.AddCell(CreateCell(user.Mbiemri));
-            userTable.AddCell(CreateCell("Email:").SetBold());
+            userTable.AddCell(CreateCell("Email:").AddStyle(titleStyle));
             userTable.AddCell(CreateCell(user.Email));
 
             document.Add(userTable);
@@ -82,16 +92,23 @@ namespace ResumeModuleApp.DataService
         {
             document.Add(new Paragraph("\n"));
 
+            var titleStyle = new Style()
+                .SetFontSize(14)
+                .SetBold();
 
-            document.Add(new Paragraph("Resume Information").SetFontSize(14).SetBold());
+            var titleParagraph = new Paragraph("Resume Information")
+                .AddStyle(titleStyle)
+                .SetBackgroundColor(DeviceRgb.RED);
+
+            document.Add(titleParagraph);
 
             var infoTable = new Table(2).UseAllAvailableWidth();
             infoTable.SetBorder(new SolidBorder(1f));
-            infoTable.AddCell(CreateCell("Education:").SetBold());
+            infoTable.AddCell(CreateCell("Education:").AddStyle(titleStyle));
             infoTable.AddCell(CreateCell(resume.Education));
-            infoTable.AddCell(CreateCell("Position:").SetBold());
+            infoTable.AddCell(CreateCell("Position:").AddStyle(titleStyle));
             infoTable.AddCell(CreateCell(resume.Position));
-            infoTable.AddCell(CreateCell("Languages:").SetBold());
+            infoTable.AddCell(CreateCell("Languages:").AddStyle(titleStyle));
             infoTable.AddCell(CreateCell(resume.Languages));
 
             document.Add(infoTable);
@@ -99,28 +116,31 @@ namespace ResumeModuleApp.DataService
 
         private void AddSkillsAndExperiencesSection(Document document, Resume resume)
         {
-
             document.Add(new Paragraph("\n"));
 
+            var titleStyle = new Style()
+                .SetFontSize(14)
+                .SetBold();
 
-            document.Add(new Paragraph("Skills and Experiences").SetFontSize(14).SetBold());
+            var titleParagraph = new Paragraph("Skills and Experiences")
+                .AddStyle(titleStyle)
+                .SetBackgroundColor(DeviceRgb.RED);
 
+            document.Add(titleParagraph);
 
             var skillsAndExperiencesTable = new Table(2).UseAllAvailableWidth();
             skillsAndExperiencesTable.SetBorder(new SolidBorder(1f));
 
-
             var skillsCell = new Cell().SetBorder(Border.NO_BORDER);
-            skillsCell.Add(new Paragraph("Skills").SetBold());
+            skillsCell.Add(new Paragraph("Skills").AddStyle(titleStyle));
             foreach (var skill in resume.Skills)
             {
                 skillsCell.Add(new Paragraph($"- {skill.Description}").SetBorder(Border.NO_BORDER));
             }
             skillsAndExperiencesTable.AddCell(skillsCell);
 
-
             var experiencesCell = new Cell().SetBorder(Border.NO_BORDER);
-            experiencesCell.Add(new Paragraph("Experiences").SetBold());
+            experiencesCell.Add(new Paragraph("Experiences").AddStyle(titleStyle));
             foreach (var experience in resume.Experiences)
             {
                 experiencesCell.Add(new Paragraph($"- {experience.Description}").SetBorder(Border.NO_BORDER));
@@ -129,6 +149,9 @@ namespace ResumeModuleApp.DataService
 
             document.Add(skillsAndExperiencesTable);
         }
+
+        
+
 
         private Cell CreateCell(string text)
         {
