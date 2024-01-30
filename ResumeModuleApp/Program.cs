@@ -15,7 +15,6 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies()); // i tregon aplikacionit qe ka automapper
 builder.Services.AddControllers();
-builder.Services.AddSingleton(new PdfWriter(new PdfWriter(new MemoryStream())));
 
 
 
